@@ -1,0 +1,138 @@
+
+Lab Title: Google Cloud Fundamentals. Getting Started with Google Kubernetes Engine (GKE).
+
+
+Objectives: 
+           Learn how to perform the following tasks:
+                                                    1. Provision a Kubernetes cluster using Kubernetes Engine.
+                                                    2. Deploy and manage Docker containers using kubectl.
+
+
+
+Steps:
+
+1. Confirm that the needed APIs are enabled.   
+
+     Excute the following command to display the project IDs for your Google Cloud project:
+
+                    gcloud projects list
+
+     Make a note of the name of your specific GCP project. This value is shown in the top bar of the Google Cloud Platform Console 
+     and is of the form qwiklabs-gcp- followed by hexadecimal numbers.
+
+     Using the appropriate project ID, set the default project to the one in which you want to enable the API:
+                 
+                    gcloud config set project PROJECT\_ID
+
+     To get a list of services that you can enable in your project, run the following command:
+
+                    gcloud services list --available
+
+     Scroll down along the list of enabled APIs and confirm that the needed APIs (Kubernetes Engine API and Container Registry API) are enabled.
+
+     If either API is missing, excute the following commands:
+
+                    gcloud services enable Kubernetes Engine API
+
+                    gcloud services enable Container Registry API
+
+
+2. Start a Kubernetes Engine cluster.
+
+        For convenience, place the zone that Qwiklabs assigned you to into an environment variable called MY_ZONE. Run this command:
+
+                     export MY_ZONE=us-central1-a
+
+   Start a Kubernetes cluster managed by Kubernetes Engine. Name the cluster webfrontend and configure it to run 2 nodes by excuting the following command:
+
+                     gcloud container clusters create webfrontend --zone $MY_ZONE --numnodes 2
+
+   It takes several minutes to create a cluster as Kubernetes Engine provisions virtual machines for you.
+
+    After the cluster is created, check your installed version of Kubernetes using the following kubectl version command:
+
+                    kubectl version
+
+    The gcloud container clusters create command automatically authenticated kubectl for you.
+
+
+3. Run and deploy a container.
+
+   From your Cloud Shell prompt, launch a single instance of the nginx container. (Nginx is a popular web server.)
+
+                  kubectl create deploy nginx --image=nginx:1.17.10
+
+   In Kubernetes, all containers run in pods. This use of the "kubectl create" command caused Kubernetes to create a deployment consisting of a single pod containing the nginx container.
+
+   View the pod running the nginx container by running the following command:
+
+                  kubectl get pods
+
+   Expose the nginx container to the Internet by excuting the following command:
+
+                 kubectl expose deployment nginx --port 80 --type LoadBalancer
+
+   Kubernetes created a service and an external load balancer with a public IP address attached to it. The IP address remains the same for the life of the service. 
+   Any network traffic to that public IP address is routed to pods behind the service: in this case, the nginx pod
+
+   To view the new service. excute the following command:
+
+                kubectl get services
+
+    You can use the displayed external IP address to test and contact the nginx container remotely. It may take a few seconds before the External-IP field is populated for your service. 
+    This is normal. Just re-run the kubectl get services command every few seconds until the field is populated.
+
+    Open a new web browser tab and paste your cluster's external IP address into the address bar. The default home page of the Nginx browser is displayed.
+
+    Excute the following command to scale up the number of pods running on your service:
+
+                kubectl scale deployment nginx --replicas 3
+
+   Scaling up a deployment is useful when you want to increase available resources for an application that is becoming more popular.
+
+   Confirm that Kubernetes has updated the number of pods by excuting the following command:
+
+                kubectl get pods
+
+   Confirm that your external IP address has not changed. Excute the following command:
+
+               kubectl get services
+
+   Return to the web browser tab in which you viewed your cluster's external IP address. Refresh the page to confirm that the nginx web server is still responding
+
+   
+    
+
+
+
+
+
+  
+
+  
+
+
+
+                 
+
+
+
+     
+
+      
+
+
+
+
+
+    
+
+
+
+  
+
+
+
+    
+
+    
