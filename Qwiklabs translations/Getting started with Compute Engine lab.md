@@ -1,5 +1,7 @@
 Google Cloud Fundamentals: Getting Started with Compute Engine
+
 Lab Objectives: Be able to create virtual machines (VMs) instances and connect to them, and create connections between the instances.
+
 Task 1: Sign in to the Google Cloud Platform (GCP) Console
 login into Google Cloud using the command below
 gcloud auth login
